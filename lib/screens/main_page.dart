@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfolio/components/navigation_bar.dart';
-
+import '../components/intro_card.dart';
 import '../components/social_media_section.dart';
 
 class MainPage extends StatefulWidget {
@@ -18,24 +18,6 @@ class _MainPageState extends State<MainPage> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           bool isMobile = constraints.maxWidth < 600;
-
-          // Common Text Styles for reuse
-          TextStyle nameStyle = TextStyle(
-            color: Colors.white,
-            fontSize: isMobile
-                ? constraints.maxWidth * 0.04
-                : constraints.maxWidth * 0.02,
-            fontWeight: FontWeight.w600,
-          );
-
-          TextStyle titleStyle = TextStyle(
-            color: Colors.white70,
-            fontSize: isMobile
-                ? constraints.maxWidth * 0.08
-                : constraints.maxWidth * 0.1,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 5,
-          );
 
           return Stack(
             children: [
@@ -62,40 +44,11 @@ class _MainPageState extends State<MainPage> {
                         ),
                       ],
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 20),
 
-                    // Introduction Section
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "I'm",
-                              style: titleStyle,
-                            ),
-                            const SizedBox(width: 10.0),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Text(
-                                'Menuzwantha Hewage.',
-                                style: nameStyle,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10.0),
-                        Text(
-                          'Flutter Developer | Software Engineer',
-                          style: TextStyle(
-                            color: Colors.white54,
-                            fontSize: isMobile ? 12 : 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
+                    // Modernized Introduction Section with Buttons inside the Card View
+                    IntroCard(isMobile: isMobile, constraints: constraints),
+                    Spacer(),
 
                     // Navigation Bar Section
                     Center(
@@ -111,13 +64,33 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
 
-              // Social Media Section (Top Right Corner Down)
-              Positioned(
-                top: isMobile ? 10 : 30,
-                right: isMobile ? 10 : 30,
-                child: SocialMediaIcons(isMobile: isMobile),
-              ),
+              // Social Media Section (Top Right Corner Down) - Visible only for larger screens
+              if (!isMobile)
+                Positioned(
+                  top: 30,
+                  right: 30,
+                  child: SocialMediaIcons(isMobile: isMobile),
+                ),
             ],
+          );
+        },
+      ),
+      drawer: Builder(
+        builder: (context) {
+          return Drawer(
+            child: ListView(
+              children: [
+                // Add social media icons inside the drawer for mobile screens
+                if (MediaQuery.of(context).size.width < 600)
+                  Column(
+                    children: [
+                      ListTile(
+                        title: SocialMediaIcons(isMobile: true),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           );
         },
       ),
